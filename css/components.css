@@ -1,0 +1,72 @@
+/* Piezas de UI reutilizables (no dependen de una seccion especifica de la pagina) */
+
+/* BADGE (contador del carrito) */
+#cart-count {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    font-size: var(--fs-sm);
+    line-height: 1;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+}
+
+/* BOTON DE CERRAR (usado en el carrito y en el modal) */
+#close-checkout,
+#close-cart {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    font-size: var(--fs-lg);
+}
+
+/* Dentro del header del carrito no necesita posicionarse de forma absoluta */
+.cart-header #close-cart {
+    position: static;
+}
+
+/* FORMULARIO (controles reutilizables de inputs/select) */
+#checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+}
+
+#checkout-form label {
+    font-size: var(--fs-sm);
+    margin-top: var(--space-xs);
+}
+
+#checkout-form input,
+#checkout-form select {
+    padding: var(--space-xs);
+    border: 1px solid var(--color-gray-400);
+    border-radius: var(--radius);
+}
+
+#checkout-form input:focus,
+#checkout-form select:focus {
+    outline: none;
+    border-color: var(--color-black);
+}
+
+/* Texto de ayuda / nota pequeña */
+.checkout-note {
+    font-size: var(--fs-sm);
+    color: var(--color-gray-600);
+    font-style: italic;
+}
+
+/* BOTON PRINCIPAL */
+.btn-primary {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius);
+    transition: background-color var(--transition);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+    background-color: var(--color-gray-600);
+}
