@@ -4,13 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Catálogo Mayorista">
+    <meta property="og:title" content="Fashion Style - Catálogo Mayorista">
+    <meta property="og:description" content="Catálogo mayorista de ropa para dama, caballero y niños">
+    <meta property="og:image" content="./img/og-image.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tudominio.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#TU_COLOR_MARCA">
+    <link rel="icon" href="./img/favicon.ico">
     <title>Catalogo Mayorista</title>
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/variables.css">
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/styles.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Fashion Style",
+      "description": "Catálogo mayorista de ropa para dama, caballero y niños",
+      "url": "https://tudominio.com",
+      "sameAs": [
+        "https://instagram.com/fashionstyle",
+        "https://tiktok.com/@fashionstyle"
+      ]
+    }
+    </script>
 </head>
 <body>
+
+    <a href="#product-grid" class="skip-link">Saltar al contenido</a>
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -19,19 +42,19 @@
 
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#" class="nav-link filter-btn" data-genero="todos">Todos</a>
+                    <button class="nav-link filter-btn" data-genero="todos" aria-pressed="true">Todos</button>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link filter-btn" data-genero="dama">Dama</a>
+                    <button class="nav-link filter-btn" data-genero="dama" aria-pressed="false">Dama</button>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link filter-btn" data-genero="caballero">Caballero</a>
+                    <button class="nav-link filter-btn" data-genero="caballero" aria-pressed="false">Caballero</button>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link filter-btn" data-genero="ninos">Niños</a>
+                    <button class="nav-link filter-btn" data-genero="ninos" aria-pressed="false">Niños</button>
                 </li>
             </ul>
 
@@ -44,6 +67,10 @@
         </div>
     </nav>
 
+    <div class="search-bar">
+        <input type="search" id="search-input" placeholder="Buscar producto...">
+    </div>
+
     <!-- BREADCRUMB / FILTRO ACTIVO -->
     <div class="active-filter" id="active-filter">
         <p>Mostrando: <span id="filter-label">Todos los productos</span></p>
@@ -51,15 +78,33 @@
 
     <!-- GRID DE PRODUCTOS -->
     <main>
+        <noscript>
+            <p class="noscript-message">Activa JavaScript para ver el catálogo completo, o escríbenos por WhatsApp al +58 000-0000000.</p>
+        </noscript>
+
+        <div id="loading-state" class="loading-state">Cargando productos...</div>
+        <div id="empty-state" class="empty-state" style="display:none;">No se encontraron productos.</div>
+
         <section class="product-grid" id="product-grid">
             <!-- Las tarjetas de producto se generan dinámicamente con JS -->
         </section>
+
+        <template id="product-card-template">
+            <article class="product-card">
+                <img loading="lazy" alt="">
+                <h3></h3>
+                <p class="price"></p>
+                <button class="btn-add-cart">Agregar</button>
+            </article>
+        </template>
+
+        <button id="load-more-btn" class="btn-secondary">Ver más productos</button>
     </main>
 
     <!-- SIDEBAR DEL CARRITO -->
-    <aside id="cart-sidebar" class="cart-sidebar">
+    <aside id="cart-sidebar" class="cart-sidebar" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true">
         <div class="cart-header">
-            <h2>Tu pedido</h2>
+            <h2 id="cart-title">Tu pedido</h2>
             <button id="close-cart" aria-label="Cerrar carrito">✕</button>
         </div>
         <div id="cart-items" class="cart-items">
@@ -72,26 +117,26 @@
     </aside>
 
     <!-- OVERLAY (para cerrar carrito/modal al hacer click afuera) -->
-    <div id="overlay" class="overlay"></div>
+    <div id="overlay" class="overlay" aria-hidden="true"></div>
 
     <!-- MODAL DE CHECKOUT -->
-    <div id="checkout-modal" class="modal">
+    <div id="checkout-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title" aria-hidden="true">
         <div class="modal-content">
             <button id="close-checkout" aria-label="Cerrar formulario">✕</button>
-            <h2>Datos del pedido</h2>
+            <h2 id="checkout-title">Datos del pedido</h2>
             <form id="checkout-form">
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" required autocomplete="given-name">
 
                 <label for="apellido">Apellido</label>
-                <input type="text" id="apellido" name="apellido" required>
+                <input type="text" id="apellido" name="apellido" required autocomplete="family-name">
 
                 <label for="telefono">Número de teléfono</label>
-                <input type="tel" id="telefono" name="telefono" required>
+                <input type="tel" id="telefono" name="telefono" required pattern="[0-9]{11}" inputmode="numeric" autocomplete="tel">
 
                 <label for="metodo-pago">Método de pago</label>
                 <select id="metodo-pago" name="metodo-pago" required>
-                    <option value="">Selecciona una opción</option>
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="efectivo">Efectivo</option>
                     <option value="pago-movil">Pago móvil</option>
                     <option value="zelle">Zelle/USDT</option>
@@ -112,5 +157,9 @@
 
     <script src="./js/main.js" defer></script>
 
+    <a href="https://wa.me/58XXXXXXXXXX" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
+        <img src="./img/whatsapp-icon.svg" alt="WhatsApp" width="24" height="24">
+    </a>
+
 </body>
-</html>
+</html> 
